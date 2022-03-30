@@ -35,18 +35,18 @@ exports.getCompanies = async (req,res,next)=>{
         const limit = parseInt(req.query.limit,10)||25;
         const startIndex=(page-1)*limit;
         const endIndex=page*limit;
-        const total = await Hospital.countDocuments();
+        const total = await Company.countDocuments();
         query=query.skip(startIndex).limit(limit);
     // Executing query
-        const hospitals = await query;
+        const companies = await query;
     // Pagination result
         const pagination = {};
         if(endIndex<total) pagination.next={page:page+1,limit}
         if(startIndex>0) pagination.prev={page:page-1,limit}
-        res.status(200).json({success:true,count:Companies.length, pagination, data:Companies});
+        res.status(200).json({success:true,count:companies.length, pagination, data:companies});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controller>companies.getCompanies'});
     }
 };
 
@@ -61,7 +61,7 @@ exports.getCompany = async (req,res,next)=>{
         res.status(200).json({success:true,data:company});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controller>companies.getCompany'});
     } 
 };
 
@@ -75,7 +75,7 @@ exports.createCompany = async (req,res,next)=>{
         res.status(201).json({success:true,data:company});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controller>companies.createCompany'});
     } 
 };
 
@@ -90,7 +90,7 @@ exports.updateCompany = async (req,res,next)=>{
         res.status(200).json({success:true,data:company});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controller>companies.updateCompany'});
     }
 };
 
@@ -106,7 +106,7 @@ exports.deleteCompany = async (req,res,next)=>{
         res.status(200).json({success:true,data:{}});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controller>companies.deleteCompany'});
     }
 };
 

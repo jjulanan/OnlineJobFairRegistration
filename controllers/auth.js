@@ -5,7 +5,8 @@ const User = require('../models/User');
 //@route POST /api/v1/auth/register
 //@access public
 exports.register = async (req,res,next)=>{
-   try{
+    try{
+        console.log(req.body);
         const {name,telephoneNumber,email,password,role} = req.body;  //Create user  // แจง .body เป็น 4 ค่า
         const user = await User.create({
             name,
@@ -16,7 +17,7 @@ exports.register = async (req,res,next)=>{
         });
         sendTokenResponse(user,200,res);        // Create token
     } catch(err){
-        res.status(400).json({success:false,msg:`test1 ${req.params.date}`});
+        res.status(402).json({success:false,msg:`/controllers>auth.register - ${req.params.date}`});
         console.log(err.stack);
     }
 }
@@ -41,7 +42,7 @@ exports.login = async (req,res,next)=>{
         sendTokenResponse(user,200,res);    //Create token
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,message:'/controllers>auth.login'});
         console.log(err.stack);
     }
 };
@@ -52,23 +53,25 @@ exports.login = async (req,res,next)=>{
 //@access   Private
 exports.getMe = async (req,res,next)=>{
     try{
+        console.log(">> getme");
         const user = await User.findById(req.user.id);
-        let role=req.user.role;
+        let role = req.user.role;
         res.status(200).json({success:true,status:role,data:user});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controllers>auth.getMe'});
         console.log(err.stack);
     }
 };
 
 exports.logout = async(req, res, next)=>{
     try{
+        console.log(">> logout");
         res.cookie('token','none',{expires: new Date(Date.now()+10*1000),httpOnly: true});
         res.status(200).json({success:true,data:{}});
     }
     catch(err){
-        res.status(400).json({success:false});
+        res.status(400).json({success:false,msg:'/controllers>auth.lotout'});
         console.log(err.stack);
     }
 };

@@ -39,8 +39,8 @@ const CompanySchema = new mongoose.Schema({
 
 // Cascade delete Bookings when a Company is deleted
 CompanySchema.pre('remove', async function(next) {
-    console.log(`Bookings being removed from Company ${this._id}`);
-    await this.model('Booking').deleteMany({Company: this._id});
+    console.log(`Bookings being removed from Company ${this._id}, because Company is being removed after`);
+    await this.model('Booking').deleteMany({Company: this._id});    // delete everything in Booking related to Company
     next();
 });
 // Reverse populate with virtuals

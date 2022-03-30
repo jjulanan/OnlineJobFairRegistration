@@ -8,7 +8,7 @@ exports.protect = async (req,res,next)=>{
         token = req.headers.authorization.split(' ')[1];
     }
     if(!token || token=='null'){        //Make sure token exists
-        return res.status(401).json({success:false, message:'Not authorize to access this route (middleware/auth)'});
+        return res.status(401).json({success:false, message:'Not authorize to access this route (/middleware>auth.protect1)'});
     }
     try{                                //Verify token
         const decoded = jwt.verify(token,process.env.JWT_SECRET);
@@ -17,7 +17,7 @@ exports.protect = async (req,res,next)=>{
         next();
     }catch(err){
         console.log(err.stack);
-        return res.status(401).json({success:false,message:'Not authorize to access this route (middleware/auth)'});
+        return res.status(401).json({success:false,message:'Not authorize to access this route (/middleware>auth.protect.err)'});
     }
 }
 
@@ -25,7 +25,7 @@ exports.authorize=(...roles)=>{         //Grant access to specific roles
     return (req,res,next)=>{
         if(!roles.includes(req.user.role)){
             return res.status(403).json({success:false,
-                message:`๊User role ${req.user.role} is not authorized to access this route (middleware/auth)`});
+                message:`๊User role ${req.user.role} is not authorized to access this route (/middleware>auth.authorize)`});
         }
         next();
     }
