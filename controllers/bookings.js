@@ -63,21 +63,16 @@ exports.addBooking = async (req,res,next)=>{
             return res.status(400).json({success:false,status:role,
                 message:`The user with ID ${req.user.id} has already made 3 bookings`});
         }
-
-        // Verify available session
-        req.body.bookingDate = req.params.date;
-        const start = "2022-05-10T09:00:00.377+00:00"; //start.setHours(0, 0, 0, 0);
-        const end = "2022-05-13T17:00:00.377+00:00";   //end.setHours(23, 59, 59, 999);
-        availableInterviewSession = {$gte:start,$lte:end}
-        console.log(`xxx`)
-/*
-        let interviewSessionPeriod = req.
-        if(!interviewSessionPeriod){       // Verify interview session period
-            return res.status(404).json({success:false,
-                message:`No interview session in ${req.params.companyId}`});
+        // * check booking date to be within 10 - 13 May 2022 only.
+        const start = '2022-05-10T00:00:00.000+00:00';
+        const end = '2022-05-13T23:59:59.000+00:00';
+        let choseApptDate = req.body.apptDate;
+        if (choseApptDate < start || choseApptDate > end) {
+            return res.status(400).json({
+                success: false,
+                message: `The booking must be within 10 - 13 May 2022 only`
+            })
         }
-*/
-        
         const booking = await Booking.create(req.body);
         res.status(200).json({success:true,status:role,data:booking});
     }

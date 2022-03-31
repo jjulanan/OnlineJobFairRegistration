@@ -16,7 +16,7 @@ Project#3 : Online Job Fair Registration
     the date (during May 10 th 13 th , 2022 ) and the preferred companies. The company list is also provided
     to the user. A company information includes the company name, address, website, description, and
     telephone number.
->> (pending)
+>> (done)
 
 4. The system shall allow the registered user to view his interview session bookings.
 >> (done)

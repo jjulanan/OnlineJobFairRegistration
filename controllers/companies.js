@@ -30,19 +30,30 @@ exports.getCompanies = async (req,res,next)=>{
         } else{
             query=query.sort('-createdAt');             // ถ้าไม่ได้ส่ง sort มาก็ให้เรียงตาม createAt ซึ่งคือวันที่สร้างข้อมูลขึ้นมา
         }
-    // Pagination
-        const page = parseInt(req.query.page,10)||1;
-        const limit = parseInt(req.query.limit,10)||25;
+    // Pagination (page,limit)
+        const page = parseInt(req.query.page,10) || 1;
+        const limit = parseInt(req.query.limit,10) || 25;
         const startIndex=(page-1)*limit;
         const endIndex=page*limit;
         const total = await Company.countDocuments();
-        query=query.skip(startIndex).limit(limit);
+
+
+        
+        if(endIndex <= total){
+            console.log(`${endIndex} : ${total}`);
+            console.log(`${req.query.limit} : ${req.query.page}`);
+            return res.status(400).json({success:false,msg:'Need more room to display all data'});  // custom
+        }
+        query = query.skip(startIndex).limit(limit);        // bug
     // Executing query
-        const companies = await query;
+        const companies = await query;       // bug
+
+
+
     // Pagination result
         const pagination = {};
-        if(endIndex<total) pagination.next={page:page+1,limit}
-        if(startIndex>0) pagination.prev={page:page-1,limit}
+        if(endIndex<total) pagination.next={page:page+1,limit};
+        if(startIndex>0) pagination.prev={page:page-1,limit};
         res.status(200).json({success:true,count:companies.length, pagination, data:companies});
     }
     catch(err){
