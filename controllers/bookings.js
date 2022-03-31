@@ -52,18 +52,24 @@ exports.addBooking = async (req,res,next)=>{
     try{
         req.body.company = req.params.companyId;
         let role=req.user.role;
-        const company = await Hospital.findById(req.params.companyId);
-        if(!company){       // Verify existence company
+        const company = await Company.findById(req.params.companyId);
+        if(!company){                  // Verify existence company
             return res.status(404).json({success:false,
                 message:`No company with the id of ${req.params.companyId}`});
         }
+        req.body.user=req.user.id;      //add userId to req.body
+        const existedBookings = await Booking.find({user:req.user.id});     // Verify maximum booking
+        if(existedBookings.length>=3 && req.user.role!=='admin'){   // Can create only 3 booking except admin
+            return res.status(400).json({success:false,status:role,
+                message:`The user with ID ${req.user.id} has already made 3 bookings`});
+        }
 
-
-
+        // Verify available session
         req.body.bookingDate = req.params.date;
         const start = "2022-05-10T09:00:00.377+00:00"; //start.setHours(0, 0, 0, 0);
         const end = "2022-05-13T17:00:00.377+00:00";   //end.setHours(23, 59, 59, 999);
         availableInterviewSession = {$gte:start,$lte:end}
+        console.log(`xxx`)
 /*
         let interviewSessionPeriod = req.
         if(!interviewSessionPeriod){       // Verify interview session period
@@ -71,13 +77,7 @@ exports.addBooking = async (req,res,next)=>{
                 message:`No interview session in ${req.params.companyId}`});
         }
 */
-
-        req.body.user=req.user.id;      //add userId to req.body
-        const existedBookings = await Booking.find({user:req.user.id});     //Check for existed booking
-        if(existedBookings.length>=3 && req.user.role!=='admin'){   // Can create only 3 booking except admin
-            return res.status(400).json({success:false,status:role,
-                message:`The user with ID ${req.user.id} has already made 3 bookings`});
-        }
+        
         const booking = await Booking.create(req.body);
         res.status(200).json({success:true,status:role,data:booking});
     }

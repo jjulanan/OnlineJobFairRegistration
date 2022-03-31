@@ -1,3 +1,7 @@
+// Contact us
+tittae@live.com
+kop.julanan@gmail.com
+
 // Git hub
 https://github.com/jjulanan/OnlineJobFairRegistration.git
 
@@ -11,7 +15,7 @@ git config --global "kop.julanan@gmail.com"
 git config --global "JJ""
 git add .
 git commit -m "Initial Express Setup"
-git push -u
+git push -u origin
 git status
 git log
 git log --oneline
